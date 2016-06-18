@@ -12,12 +12,12 @@ var CustomMFMessageComposeViewControllerDelegate = NSObject.extend({
     messageComposeViewControllerDidFinishWithResult: function(controller, result){
         controller.dismissModalViewControllerAnimated(true);
 
-        if(result === MessageComposeResultCancelled){
+        if(result === MessageComposeResult.MessageComposeResultCancelled){
             this.resolve({
                 response:"cancelled"
             });
         }
-        else if(result === MessageComposeResultSent){
+        else if(result === MessageComposeResult.MessageComposeResultSent){
             this.resolve({
                 response:"success"
             });
@@ -34,7 +34,7 @@ var CustomMFMessageComposeViewControllerDelegate = NSObject.extend({
     protocols: [MFMessageComposeViewControllerDelegate]
 });
 
-export function dial(telNum,prompt) {
+export function dial(telNum:string,prompt:boolean) {
 	var sURL = "tel://";
 
 	if (prompt) {
@@ -54,11 +54,17 @@ export function dial(telNum,prompt) {
 
 }
 
-export function sms(smsNum, messageText) {
+export function sms(smsNum:string|string[], messageText:string) {
     return new Promise(function (resolve, reject){
-        if(!Array.isArray(smsNum)){
-            smsNum = [smsNum];
-        }
+        let numbers;
+        if(!Array.isArray(smsNum))
+            numbers = [smsNum];
+        else
+            numbers = smsNum;
+
+        let smsNumbers = new NSArray(numbers);
+
+
 
         var page = frameModule.topmost().ios.controller;
         var controller = MFMessageComposeViewController.alloc().init();
@@ -69,7 +75,7 @@ export function sms(smsNum, messageText) {
 
         if(MFMessageComposeViewController.canSendText()){
             controller.body = messageText;
-            controller.recipients = smsNum;
+            controller.recipients = smsNumbers;
             page.presentModalViewControllerAnimated(controller, true);
         }
         else{

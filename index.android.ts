@@ -1,7 +1,6 @@
 import * as application from "application";
 
-export function dial(telNum,prompt) {
-
+export function dial(telNum:string,prompt:boolean) {
 	try {
 		var intentType = android.content.Intent.ACTION_CALL;
 		if (prompt) {
@@ -22,16 +21,18 @@ export function dial(telNum,prompt) {
 	}
 }
 
-export function sms(smsNum, messageText) {
+export function sms(smsNum:string|string[], messageText:string) {
     return new Promise(function (resolve, reject){
+		let smsNumbers;
         if(!Array.isArray(smsNum)){
-            smsNum = [smsNum];
-        }
+            smsNumbers = [smsNum];
+        }else
+			smsNumbers = smsNum;
 
     	try {
             var SEND_SMS = 1001;
     		var intent = new android.content.Intent(android.content.Intent.ACTION_VIEW);
-            intent.putExtra("address", smsNum.join(";"));
+            intent.putExtra("address", smsNumbers.join(";"));
     		intent.putExtra("sms_body", messageText);
             intent.setType("vnd.android-dir/mms-sms");
 
@@ -54,8 +55,7 @@ export function sms(smsNum, messageText) {
                             return resolve({
                                 response:"failed"
                             });
-                        }
-                        break;
+                        };
                     default:
                         if (typeof previousResult === 'function') {
                             previousResult(requestCode, resultCode, data);
