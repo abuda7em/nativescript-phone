@@ -21,8 +21,8 @@
 	"homepage": "https://github.com/msywensky/nativescript-phone",
 	"nativescript": {
 		"platforms": {
-			"android": "1.0.0",
-			"ios": "1.0.0"
+			"android": "1.0.1",
+			"ios": "1.0.1"
 		}
 	}
 }
