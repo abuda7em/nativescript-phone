@@ -1,2 +1,2 @@
-declare function dial(telNum:string,prompt:boolean);
-declare function sms(smsNum:string|string[], messageText:string);
+export function dial(telNum:string,prompt:boolean){};
+export function sms(smsNum:string|string[], messageText:string){};
